@@ -1,4 +1,3 @@
-/* ====== ページ全体のスタイル ====== */
 body {
     font-family: Arial, sans-serif;
     background: white;
@@ -7,12 +6,11 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
     flex-direction: column;
 }
 
-/* ====== メインコンテンツのコンテナ ====== */
 .container {
     background: white;
     padding: 20px;
@@ -25,19 +23,24 @@ body {
     max-width: 500px;
 }
 
-/* ====== 入力フィールド ====== */
+.input-group {
+    margin-bottom: 8px;
+    display: flex;
+    flex-direction: column;
+}
+    
 input {
-    width: 80%;
+    width: 100%;
+    box-sizing: border-box;
     padding: 10px;
     font-size: 18px;
-    margin-bottom: 10px;
+    margin: 5px auto;
     text-align: center;
     border: 2px solid #4facfe;
     border-radius: 5px;
-    box-sizing: border-box;
+    display: block;
 }
-
-/* ====== ボタンのスタイル ====== */
+    
 button {
     background: #00c6ff;
     color: white;
@@ -46,9 +49,10 @@ button {
     cursor: pointer;
     font-size: 18px;
     border-radius: 5px;
-    margin-top: 13px;
-    margin-bottom: 15px;
+    margin-top: 10px;
     transition: background 0.275s ease;
+    position: relative;
+    will-change: transform;
     display: inline-block;
 }
 
@@ -56,98 +60,41 @@ button:hover {
     background: #0072ff;
 }
 
-/* ====== 結果・時間・進行状況の表示 ====== */
-.result, .progress {
+.result {
+    display: none;
     font-size: 18px;
-    margin-top: 8px;
-    color: #333;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    max-width: 100%;
-    text-align: left;
-    white-space: pre-wrap;
-    font-family: monospace;
-}
-
-.time {
-    font-size: 18px;
-    color: #333;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    max-width: 100%;
-    text-align: left;
-    white-space: pre-wrap;
-    font-family: monospace;
-}
-
-/* ====== 計算中の表示 ====== */
-.loading {
-    font-size: 17px;
-    color: #0072ff;
     margin-top: 10px;
-    display: none;
-    display: flex;
-    align-items: flex-start;
-    gap: 1px;
+    color: #333;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+    text-align: left;
+    white-space: pre-wrap;
+    font-family: monospace;
+    max-height: 150px;
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background: #f9f9f9;
+    border-radius: 5px;
 }
 
-/* ====== ローディングアニメーション ====== */
-.spinner {
-    position: relative;
-    display: none;
-    border: 4px solid rgba(0, 0, 0, 0.1);
-    border-top-color: #0072ff;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    animation: spin 1s linear infinite;
+.exponent-result {
+    font-size: 18px;
+    margin-top: 15px;
+    color: #333;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+    text-align: left;
+    white-space: pre-wrap;
+    font-family: monospace;
 }
 
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-/* ====== 制限メッセージ ====== */
 .limits {
+    color: red;
     font-size: 15px;
-    margin-top: 10px;
-    color: red;
-}
-
-/* ====== 入力欄と桁数カウンターのスタイル ====== */
-.input-container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.char-counter {
-    font-size: 18px;
-    color: #333;
-}
-
-.char-counter.limit-reached {
-    color: red;
-}
-
-/* ====== エラーメッセージのスタイル ====== */
-.error-message {
-    font-size: 16px;
-    color: red;
-    margin-top: 5px;
-    display: none;
-}
-
-/* ====== スピンボタンの非表示（数値入力フィールド） ====== */
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-input[type="number"] {
-    -moz-appearance: textfield;
-    appearance: textfield;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    line-height: 1.2;
 }
