@@ -1,0 +1,137 @@
+:root {
+  --bg: #d31f1f;                  /* より暗めの背景色 */
+  --app-hover: #3a7bb0;           /* アクセントをやや青っぽく */
+  --text: #ffffff;                /* 柔らかい白系の文字色 */
+  --hover: #2c3e50;               /* アクセントカラーを暗く */
+  --sidebar-bg: #151a2f;          /* 固定：サイドバー背景色 */
+  --header-bg: #101020;           /* 固定：ヘッダー背景色 */
+  --transition: 0.3s ease;          /* トランジションの統一 */
+  --border-radius: 6px;             /* ボタンや要素の角丸 */
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  color: var(--text);
+}
+
+header {
+  background: var(--header-bg);
+  color: var(--text);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  height: 13%;       /* 高さを固定 */
+  padding: 0;        /* 必要に応じて余白を調整 */
+  line-height: 60px; /* テキストを中央揃えにする */
+}
+
+.header-title {
+  margin-left: 20px; /* 左に20px移動 */
+}
+
+#menuToggle {
+  background: transparent;
+  border: 2px solid var(--app-hover);
+  padding: 0.8rem 1.2rem;
+  color: var(--text);
+  font-size: 0.8rem;
+  font-weight: bold;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  transition: color var(--transition), background var(--transition);
+  margin-right: 20px;
+}
+
+#menuToggle::before {
+  content: "";
+  width: 100%;
+  position: absolute;
+  top: 0;
+  right: -60px;
+  z-index: -1;
+  border-right: 60px solid transparent;
+  border-bottom: 60px solid var(--app-hover);
+  transform: translateX(-100%);
+  transition: transform var(--transition);
+}
+
+#menuToggle:hover {
+  color: #ffffff
+}
+
+#menuToggle:hover::before {
+  transform: translateX(0);
+}
+
+#sidebar {
+  position: fixed;
+  top: 13%;
+  left: 0;
+  width: 20%;
+  min-width: 190px;
+  height: calc(100% - 13%);
+  background: var(--sidebar-bg);
+  transform: translateX(-100%);
+  transition: transform var(--transition);
+  z-index: 1001;
+}
+
+#sidebar.open {
+  transform: translateX(0);
+}
+
+#sidebar ul {
+  list-style: none;
+  padding: 1rem;
+}
+
+#sidebar li {
+  margin: 10px 0;
+}
+
+#sidebar button {
+  width: 100%;
+  background: none;
+  color: var(--text);
+  border: none;
+  padding: 0.8rem;
+  text-align: left;
+  font-size: 1rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+#sidebar button:hover,
+#sidebar button:focus {
+  background: var(--hover);
+}
+
+#overlay {
+  display: none;
+  position: fixed;
+  top: 13%;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 13%);
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+#overlay.active {
+  display: block;
+}
+
+iframe {
+  margin-top: 0;
+  width: 100%;
+  border: none;
+}
