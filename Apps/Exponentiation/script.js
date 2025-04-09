@@ -1,0 +1,79 @@
+function calculatePower() {
+    let base = parseFloat(document.getElementById("base").value);
+    let exponent = parseFloat(document.getElementById("exponent").value);
+    let resultElement = document.getElementById("result");
+    let exponentResultElement = document.getElementById("exponentResult");
+
+    if (isNaN(base) || isNaN(exponent)) {
+        resultElement.innerHTML = "⚠ 数字を入力してください";
+        resultElement.style.display = "block";
+        exponentResultElement.innerHTML = "";
+        return;
+    }
+
+    if (base < -1e308 || base > 1e308 || exponent < -100000 || exponent > 100000) {
+        resultElement.innerHTML = "⚠ 許容範囲を超えています (底は-1e308以上, 指数は-100000以上)";
+        resultElement.style.display = "block";
+        exponentResultElement.innerHTML = "";
+        return;
+    }
+
+    try {
+        if (base < 0 && !Number.isInteger(exponent)) {
+            resultElement.innerHTML = "⚠ 負の底に対して小数の指数は計算できません";
+            exponentResultElement.innerHTML = "";
+            resultElement.style.display = "block";
+            return;
+        }
+
+        let floatResult = Math.pow(base, exponent);
+        let logResult = Math.log10(Math.abs(base)) * exponent;
+
+        if (!Number.isFinite(logResult)) {
+            exponentResultElement.innerHTML = "計算結果: INFINITY";
+            return;
+        }
+
+        let newExponent = Math.floor(logResult);
+        let coefficient = Math.pow(10, logResult % 1).toPrecision(5);
+
+        //  もし coefficient の最初の桁が 0 なら指数を1つ下げて補正
+        if (coefficient < 1) {
+            coefficient *= 10;
+            newExponent -= 1;
+        }
+
+        //  もし計算結果の指数が -1 以下なら指数を1つ上げて補正
+        if (newExponent <= -1) {
+            newExponent += 1;
+        }
+
+        let sign = floatResult < 0 ? "-" : "";
+        let exponentForm = `${sign}${coefficient} × 10^${newExponent}`;
+        exponentResultElement.innerHTML = `計算結果: ${exponentForm}`;
+
+        if (Number.isInteger(base) && Number.isInteger(exponent) && exponent >= 0) {
+            let bigIntResult = BigInt(Math.round(base)) ** BigInt(exponent);
+            resultElement.innerHTML = `詳細:\n${bigIntResult.toString()}`;
+            resultElement.style.display = "block";
+        } else {
+            resultElement.innerHTML = `詳細:\n${floatResult.toExponential(20)}`;
+            resultElement.style.display = "block";
+        }
+        
+    } catch (error) {
+        resultElement.innerHTML = "⚠ 計算エラー: INFINITY";
+        exponentResultElement.innerHTML = "";
+        resultElement.style.display = "block";
+        console.error("計算エラー:", error);
+        return;
+    }
+}
+
+// エンターキーで計算を実行
+document.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        calculatePower();
+    }
+});
