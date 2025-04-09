@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>統合アプリポータル</title>
+  <link rel="stylesheet" href="main_style.css" />
+</head>
+<body>
+  <header>
+    <h1 class="header-title">統合アプリ</h1>
+    <button id="menuToggle">アプリ選択 ☰</button>
+  </header>
+
+  <nav id="sidebar">
+    <ul id="appList"></ul>
+  </nav>
+
+  <div id="overlay"></div>
+
+  <iframe id="appFrame" src="Apps/Exponentiation/index.html"></iframe>
+
+  <script src="app.js"></script>
+</body>
+</html>
