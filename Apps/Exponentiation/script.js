@@ -60,6 +60,8 @@ function calculatePower() {
             resultElement.innerHTML = `詳細:\n${floatResult.toExponential(20)}`;
             resultElement.style.display = "block";
         }
+
+        window.parent.postMessage({ type: 'calculation' }, '*');
         
     } catch (error) {
         resultElement.innerHTML = "⚠ 計算エラー: INFINITY";
