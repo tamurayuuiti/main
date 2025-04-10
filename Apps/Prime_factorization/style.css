@@ -47,7 +47,7 @@ button {
     font-size: 18px;
     border-radius: 5px;
     margin-top: 13px;
-    margin-bottom: 15px;
+    margin-bottom: 13px;
     transition: background 0.275s ease;
     display: inline-block;
 }
@@ -57,10 +57,11 @@ button:hover {
 }
 
 /* ====== 結果・時間・進行状況の表示 ====== */
-.result, .progress {
+.result {
     font-size: 18px;
-    margin-top: 8px;
     color: #333;
+    margin-bottom: 15px;
+    display: none;
     word-wrap: break-word;
     overflow-wrap: break-word;
     max-width: 100%;
@@ -71,6 +72,9 @@ button:hover {
 
 .time {
     font-size: 18px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    display: none;
     color: #333;
     word-wrap: break-word;
     overflow-wrap: break-word;
@@ -111,7 +115,6 @@ button:hover {
 /* ====== 制限メッセージ ====== */
 .limits {
     font-size: 15px;
-    margin-top: 10px;
     color: red;
 }
 
@@ -134,10 +137,11 @@ button:hover {
 
 /* ====== エラーメッセージのスタイル ====== */
 .error-message {
-    font-size: 16px;
-    color: red;
-    margin-top: 5px;
+    font-size: 20px;
+    margin-top: 12px;
+    font-style: bold;
     display: none;
+    text-align: center;
 }
 
 /* ====== スピンボタンの非表示（数値入力フィールド） ====== */
