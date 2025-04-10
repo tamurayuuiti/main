@@ -1,27 +1,4 @@
-function switchApp(appName) {
-  const appPath = `Apps/${appName}/index.html`;
-  const virtualPath = `/app/${appName}`; // 仮想パスとして記録
-
-  // 仮想ページビューを送信
-  gtag('config', 'G-QZR5YW62PM', {
-    page_path: virtualPath
-  });
-
-  // 任意：切り替えイベントも送信
-  gtag('event', 'app_switch', {
-    event_category: 'Navigation',
-    event_label: appName
-  });
-
-  // アプリ切り替え
-  document.getElementById('appFrame').src = appPath;
-}
-
-const apps = [
-  { name: '累乗計算機', path: 'Apps/Exponentiation/index.html' },
-  { name: '素因数分解計算機', path: 'Apps/Prime_factorization/index.html' },
-];
-
+// DOM要素取得
 const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('overlay');
 const menuToggle = document.getElementById('menuToggle');
@@ -30,13 +7,51 @@ const appFrame = document.getElementById('appFrame');
 const header = document.querySelector('header');
 const iframe = document.querySelector('iframe');
 
-// アプリリスト生成
+// アプリ切り替え処理（GAトラッキング付き）
+function switchApp(appId) {
+  const appPath = `Apps/${appId}/index.html`;
+  const virtualPath = `/app/${appId}`;
+
+  gtag('config', 'G-QZR5YW62PM', {
+    page_path: virtualPath,
+  });
+
+  gtag('event', 'app_switch', {
+    event_category: 'Navigation',
+    event_label: appId,
+  });
+
+  appFrame.src = appPath;
+  appFrame.dataset.appName = appId;
+}
+
+// iframeからの計算イベント受信（postMessage）
+window.addEventListener('message', (event) => {
+  if (event.data?.type === 'calculation') {
+    const currentApp = appFrame.dataset.appName || 'Unknown';
+
+    gtag('event', 'calculate', {
+      event_category: 'Usage',
+      event_label: currentApp,
+    });
+
+    console.log(`✅ 計算実行 tracked: ${currentApp}`);
+  }
+});
+
+// アプリ一覧（ID＝ディレクトリ名）
+const apps = [
+  { id: 'Exponentiation', name: '累乗計算機' },
+  { id: 'Prime_factorization', name: '素因数分解計算機' },
+];
+
+// サイドメニューにアプリリストを追加
 apps.forEach(app => {
   const li = document.createElement('li');
   const button = document.createElement('button');
   button.textContent = app.name;
   button.onclick = () => {
-    appFrame.src = app.path;
+    switchApp(app.id);
     closeMenu();
   };
   li.appendChild(button);
@@ -58,6 +73,7 @@ function closeMenu() {
   overlay.classList.remove('active');
 }
 
+// iframeの高さ調整
 function adjustIframe() {
   const headerHeight = header.offsetHeight;
   iframe.style.marginTop = `${headerHeight}px`;
