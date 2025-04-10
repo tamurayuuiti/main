@@ -1,37 +1,39 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-QZR5YW62PM"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QZR5YW62PM"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-QZR5YW62PM');
+  </script>
 
-  gtag('config', 'G-QZR5YW62PM');
-</script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>累乗・冪乗計算機</title>
-    <link rel="stylesheet" href="style.css"> <!-- CSSを外部ファイル化 -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>累乗・冪乗計算機</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h2>累乗・冪乗計算機</h2>
-        
-        <div class="input-group">
-            <input type="number" id="base" placeholder="底 (Base)" step="any">
-        </div>
+  <div class="container">
+    <h2>累乗・冪乗計算機</h2>
 
-        <div class="input-group">
-            <input type="number" id="exponent" placeholder="指数 (Exponent)" step="any">
-        </div>
-
-        <button onclick="calculatePower()">計算</button>
-        <p class="exponent-result" id="exponentResult"></p>
-        <p class="result" id="result"></p>
-        <p class="limits">※ 計算可能範囲: 底 -1e308 ～ 1e308, 指数 -100000 ～ 100000</p>
+    <div class="input-group">
+      <input type="number" id="base" placeholder="底 (Base)" step="any">
     </div>
-    <script src="script.js"></script> <!-- JavaScriptを外部ファイル化 -->
+
+    <div class="input-group">
+      <input type="number" id="exponent" placeholder="指数 (Exponent)" step="any">
+    </div>
+
+    <button id="calcBtn" onclick="calculatePower()">計算</button>
+
+    <p class="exponent-result" id="exponentResult"></p>
+    <p class="result" id="result"></p>
+    <p class="limits">※ 計算可能範囲: 底 -1e308 ～ 1e308, 指数 -100000 ～ 100000</p>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
