@@ -24,6 +24,13 @@ const numberInput = document.getElementById("numberInput");
 const charCounter = document.getElementById("charCounter");
 
 numberInput.addEventListener("input", () => {
+    let value = numberInput.value;
+
+    // 入力が30桁を超えた場合、切り詰める
+    if (value.length > 30) {
+        numberInput.value = value.slice(0, 30);
+    }
+
     const length = numberInput.value.length;
     charCounter.textContent = `現在の桁数: ${length}（最大30桁）`;
 
@@ -44,23 +51,32 @@ function updateProgress() {
 async function startFactorization() {
     try {
         if (isCalculating) return;
+
+        const errorMessage = document.getElementById("errorMessage");
+        errorMessage.style.display = "none";
+
         let inputValue = document.getElementById("numberInput").value.trim();
-        if (!inputValue) return;
-
-        window.parent.postMessage({ type: 'calculation' }, '*');
-
-        let num = BigInt(inputValue);
-        console.clear();
-        console.log(`素因数分解を開始: ${num}`);
-
-        if (num < 2n) {
-            document.getElementById("result").textContent = "有効な整数を入力してください";
+        if (!inputValue || BigInt(inputValue) < 2n) {
+            errorMessage.textContent = "有効な整数を入力してください";
+            errorMessage.style.display = "block";
+            document.getElementById("time").textContent = "";
+            document.getElementById("result").textContent = "";
+            document.getElementById("time").style.display = "none";
+            document.getElementById("result").style.display = "none";
             return;
         }
 
-        document.getElementById("result").textContent = "";
+        let num = BigInt(inputValue);
+
+        // エラーメッセージを非表示にして計算を開始
+        errorMessage.style.display = "none";
+
+        console.clear();
+        console.log(`素因数分解を開始: ${num}`);
         document.getElementById("time").textContent = "";
-        document.getElementById("progress").textContent = "";
+        document.getElementById("result").textContent = "";
+        document.getElementById("time").style.display = "none";
+        document.getElementById("result").style.display = "none";
         document.getElementById("spinner").style.display = "block";
         document.getElementById("elapsed-time").style.display = "none";
         document.getElementById("loading").style.display = "flex";
@@ -109,8 +125,9 @@ async function startFactorization() {
         document.getElementById("result").textContent = "計算中にエラーが発生しました";
     } finally {
         isCalculating = false;
-        document.getElementById("progress").textContent = "";
         document.getElementById("spinner").style.display = "none";
+        document.getElementById("time").style.display = "block";
+        document.getElementById("result").style.display = "block";
         document.getElementById("elapsed-time").style.display = "none";
         document.getElementById("loading").style.display = "none";
     }
