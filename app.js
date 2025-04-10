@@ -73,6 +73,11 @@ function closeMenu() {
   overlay.classList.remove('active');
 }
 
+function updateHeaderHeight() {
+  const actualHeight = header.getBoundingClientRect().height;
+  document.documentElement.style.setProperty('--header-height', `${actualHeight}px`);
+}
+
 // iframeの高さ調整
 function adjustIframe() {
   const headerHeight = header.offsetHeight;
@@ -80,5 +85,7 @@ function adjustIframe() {
   iframe.style.height = `calc(100vh - ${headerHeight}px)`;
 }
 
-window.addEventListener('resize', adjustIframe);
 window.addEventListener('load', adjustIframe);
+window.addEventListener('load', updateHeaderHeight);
+window.addEventListener('resize', adjustIframe);
+window.addEventListener('resize', updateHeaderHeight);
