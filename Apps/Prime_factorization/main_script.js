@@ -47,6 +47,8 @@ async function startFactorization() {
         let inputValue = document.getElementById("numberInput").value.trim();
         if (!inputValue) return;
 
+        window.parent.postMessage({ type: 'calculation' }, '*');
+
         let num = BigInt(inputValue);
         console.clear();
         console.log(`素因数分解を開始: ${num}`);
