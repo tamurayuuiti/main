@@ -26,6 +26,7 @@ header {
   width: 100%;
   z-index: 1000;
   height: 13%;       /* 高さを固定 */
+  min-height: 80px;  /* 最小高さを設定 */
   padding: 0;        /* 必要に応じて余白を調整 */
   line-height: 60px; /* テキストを中央揃えにする */
 }
@@ -73,11 +74,11 @@ header {
 
 #sidebar {
   position: fixed;
-  top: 13%;
+  top: var(--header-height);
   left: 0;
   width: 20%;
   min-width: 190px;
-  height: calc(100% - 13%);
+  height: calc(100% - var(--header-height));
   background: var(--sidebar-bg);
   transform: translateX(-100%);
   transition: transform var(--transition);
@@ -118,10 +119,10 @@ header {
 #overlay {
   display: none;
   position: fixed;
-  top: 13%;
+  top: var(--header-height);
   left: 0;
   width: 100%;
-  height: calc(100% - 13%);
+  height: calc(100% - var(--header-height));
   background: rgba(0, 0, 0, 0.5);
   z-index: 1000;
 }
