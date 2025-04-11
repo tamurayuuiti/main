@@ -23,14 +23,17 @@ document.getElementById("numberInput").addEventListener("keypress", function(eve
 const numberInput = document.getElementById("numberInput");
 const charCounter = document.getElementById("charCounter");
 
-numberInput.addEventListener("input", () => {
-    let value = numberInput.value;
+numberInput.addEventListener("beforeinput", (e) => {
+    const current = numberInput.value;
+    const added = e.data || "";
+    const selectionLength = numberInput.selectionEnd - numberInput.selectionStart;
 
-    // 入力が30桁を超えた場合、切り詰める
-    if (value.length > 30) {
-        numberInput.value = value.slice(0, 30);
+    if ((current.length - selectionLength + added.length) > 30) {
+        e.preventDefault();
     }
+});
 
+numberInput.addEventListener("input", () => {
     const length = numberInput.value.length;
     charCounter.textContent = `現在の桁数: ${length}（最大30桁）`;
 
