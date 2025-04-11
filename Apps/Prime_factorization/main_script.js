@@ -33,6 +33,10 @@ numberInput.addEventListener("beforeinput", (e) => {
 });
 
 numberInput.addEventListener("input", () => {
+    if (numberInput.value.length > 30) {
+        numberInput.value = numberInput.value.slice(0, 30);
+    }
+
     const len = numberInput.value.length;
     charCounter.textContent = `現在の桁数: ${len}（最大30桁）`;
     charCounter.classList.toggle("limit-reached", len >= 30);
