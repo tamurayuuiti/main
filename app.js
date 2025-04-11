@@ -52,9 +52,12 @@ apps.forEach(app => {
   button.textContent = app.name;
   button.onclick = () => {
     switchApp(app.id);
-    closeMenu();
+    setTimeout(() => {
+      closeMenu();
+    }, 10);
     button.blur();
   };
+  
   li.appendChild(button);
   appList.appendChild(li);
 });
