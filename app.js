@@ -53,6 +53,7 @@ apps.forEach(app => {
   button.onclick = () => {
     switchApp(app.id);
     closeMenu();
+    button.blur();
   };
   li.appendChild(button);
   appList.appendChild(li);
