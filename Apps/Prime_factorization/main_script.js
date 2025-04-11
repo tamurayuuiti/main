@@ -24,24 +24,18 @@ const numberInput = document.getElementById("numberInput");
 const charCounter = document.getElementById("charCounter");
 
 numberInput.addEventListener("beforeinput", (e) => {
-    const current = numberInput.value;
-    const added = e.data || "";
-    const selectionLength = numberInput.selectionEnd - numberInput.selectionStart;
+    const len = numberInput.value.length;
+    const sel = numberInput.selectionEnd - numberInput.selectionStart;
 
-    if ((current.length - selectionLength + added.length) > 30) {
+    if (e.data && len - sel + e.data.length > 30) {
         e.preventDefault();
     }
 });
 
 numberInput.addEventListener("input", () => {
-    const length = numberInput.value.length;
-    charCounter.textContent = `現在の桁数: ${length}（最大30桁）`;
-
-    if (length >= 30) {
-        charCounter.classList.add("limit-reached");
-    } else {
-        charCounter.classList.remove("limit-reached");
-    }
+    const len = numberInput.value.length;
+    charCounter.textContent = `現在の桁数: ${len}（最大30桁）`;
+    charCounter.classList.toggle("limit-reached", len >= 30);
 });
 
 function updateProgress() {
