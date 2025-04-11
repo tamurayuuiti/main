@@ -79,7 +79,7 @@ function closeMenu() {
 
 function updateHeaderHeight() {
   const actualHeight = header.getBoundingClientRect().height;
-  document.documentElement.style.setProperty('--header-height', `${actualHeight}px`);
+  document.documentElement.style.setProperty('--header-height', `${actualHeight - 2}px`);
 }
 
 // iframeの高さ調整
