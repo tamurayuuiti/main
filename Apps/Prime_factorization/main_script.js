@@ -1,106 +1,57 @@
-// ミラー・ラビン素数判定法
-import { isPrimeMillerRabin } from './Scripts/millerRabin.js';
-
 // 試し割り法
 import { trialDivision, loadPrimes } from './Scripts/trialDivision.js';
 
 // Pollard’s rho 法
 import { pollardsRhoFactorization } from './Scripts/pollardsRho.js';
 
-const coreCount = navigator.hardwareConcurrency || 4;
+let primes = [];
 let startTime = null;
 let isCalculating = false;
-let progressInterval = null;
-let primes = [];
+const coreCount = navigator.hardwareConcurrency || 4;
 
-document.getElementById("calculateButton").addEventListener("click", startFactorization);
-document.getElementById("numberInput").addEventListener("keypress", function(event) {
-    if (event.key === "Enter") {
-        startFactorization();
-    }
-});
-
-const numberInput = document.getElementById("numberInput");
-const charCounter = document.getElementById("charCounter");
-
-numberInput.addEventListener("beforeinput", (e) => {
-    const len = numberInput.value.length;
-    const sel = numberInput.selectionEnd - numberInput.selectionStart;
-
-    if (e.data && len - sel + e.data.length > 30) {
-        e.preventDefault();
-    }
-});
-
-numberInput.addEventListener("input", () => {
-    if (numberInput.value.length > 30) {
-        numberInput.value = numberInput.value.slice(0, 30);
-    }
-
-    const len = numberInput.value.length;
-    charCounter.textContent = `現在の桁数: ${len}（最大30桁）`;
-    charCounter.classList.toggle("limit-reached", len >= 30);
-});
-
-function updateProgress() {
-    if (!startTime) return;
-    let elapsedTime = ((performance.now() - startTime) / 1000).toFixed(1);
-    document.getElementById("elapsed-time").textContent = `（経過時間: ${elapsedTime} 秒）`;
-    requestAnimationFrame(updateProgress);
-}
+const elements = {
+    numberInput: document.getElementById("numberInput"),
+    charCounter: document.getElementById("charCounter"),
+    calculateButton: document.getElementById("calculateButton"),
+    errorMessage: document.getElementById("errorMessage"),
+    result: document.getElementById("result"),
+    time: document.getElementById("time"),
+    spinner: document.getElementById("spinner"),
+    elapsedTime: document.getElementById("elapsed-time"),
+    loading: document.getElementById("loading")
+};
 
 async function startFactorization() {
     try {
         if (isCalculating) return;
 
-        const errorMessage = document.getElementById("errorMessage");
-        errorMessage.style.display = "none";
+        hideErrorAndPrepare();
 
-        let inputValue = document.getElementById("numberInput").value.trim();
+        const inputValue = elements.numberInput.value.trim();
         if (!inputValue || BigInt(inputValue) < 2n) {
-            errorMessage.textContent = "有効な整数を入力してください";
-            errorMessage.style.display = "block";
-            document.getElementById("time").textContent = "";
-            document.getElementById("result").textContent = "";
-            document.getElementById("time").style.display = "none";
-            document.getElementById("result").style.display = "none";
+            showError("有効な整数を入力してください");
             return;
         }
 
-        let num = BigInt(inputValue);
-
-        // エラーメッセージを非表示にして計算を開始
-        errorMessage.style.display = "none";
-
-        console.clear();
+        const num = BigInt(inputValue);
         console.log(`素因数分解を開始: ${num}`);
-        document.getElementById("time").textContent = "";
-        document.getElementById("result").textContent = "";
-        document.getElementById("time").style.display = "none";
-        document.getElementById("result").style.display = "none";
-        document.getElementById("spinner").style.display = "block";
-        document.getElementById("elapsed-time").style.display = "none";
-        document.getElementById("loading").style.display = "flex";
 
         isCalculating = true;
         startTime = performance.now();
 
-        // 1秒後に経過時間を表示し、更新開始
         setTimeout(() => {
-            document.getElementById("elapsed-time").style.display = "block";
+            elements.elapsedTime.style.display = "block";
             updateProgress();
         }, 1000);
 
         if (primes.length === 0) {
             await loadPrimes();
-            if (primes.length === 0) {
-                throw new Error("素数リストが空のため、計算できません");
-            }
+            if (primes.length === 0) throw new Error("素数リストが空のため、計算できません");
         }
 
         console.log("試し割り法を実行します");
         let { factors, remainder } = await trialDivision(num, primes, msg => {
-            document.getElementById("result").textContent = msg;
+            elements.result.textContent = msg;
         });
         console.log(`試し割り法完了。残りの数: ${remainder}`);
 
@@ -110,7 +61,7 @@ async function startFactorization() {
 
             if (extraFactors.includes("FAIL")) {
                 console.error(`Pollard's Rho では因数を発見できませんでした。素因数分解を中断します。`);
-                document.getElementById("result").textContent = "素因数分解失敗";
+                elements.result.textContent = "素因数分解失敗";
                 return;
             }
 
@@ -118,21 +69,76 @@ async function startFactorization() {
         }
 
         let elapsedTime = ((performance.now() - startTime) / 1000).toFixed(3);
-        document.getElementById("result").textContent = `素因数:\n${factors.sort((a, b) => (a < b ? -1 : 1)).join(" × ")}`;
-        document.getElementById("time").textContent = `計算時間: ${elapsedTime} 秒`;
+        showFinalResult(factors, elapsedTime);
         console.log(`素因数分解完了: ${factors.join(" × ")}, 計算時間: ${elapsedTime} 秒`);
     } catch (error) {
         console.error("計算エラー:", error);
-        document.getElementById("result").textContent = "計算中にエラーが発生しました";
+        elements.result.textContent = "計算中にエラーが発生しました";
     } finally {
         isCalculating = false;
-        document.getElementById("spinner").style.display = "none";
-        document.getElementById("time").style.display = "block";
-        document.getElementById("result").style.display = "block";
-        document.getElementById("elapsed-time").style.display = "none";
-        document.getElementById("loading").style.display = "none";
+        elements.spinner.style.display = "none";
+        elements.elapsedTime.style.display = "none";
+        elements.loading.style.display = "none";
     }
 }
+
+function updateProgress() {
+    if (!startTime) return;
+    let elapsedTime = ((performance.now() - startTime) / 1000).toFixed(1);
+    elements.elapsedTime.textContent = `（経過時間: ${elapsedTime} 秒）`;
+    requestAnimationFrame(updateProgress);
+}
+
+function hideErrorAndPrepare() {
+    elements.time.textContent = "";
+    elements.result.textContent = "";
+    elements.time.style.display = "none";
+    elements.result.style.display = "none";
+    elements.elapsedTime.style.display = "none";
+    elements.errorMessage.style.display = "none";
+    elements.spinner.style.display = "block";
+    elements.loading.style.display = "flex";
+    console.clear();
+}
+
+function showError(message) {
+    elements.errorMessage.textContent = message;
+    elements.errorMessage.style.display = "block";
+    elements.time.textContent = "";
+    elements.result.textContent = "";
+    elements.time.style.display = "none";
+    elements.result.style.display = "none";
+}
+
+function showFinalResult(factors, elapsedTime) {
+    elements.time.textContent = `計算時間: ${elapsedTime} 秒`;
+    elements.result.textContent = `素因数:\n${factors.sort((a, b) => (a < b ? -1 : 1)).join(" × ")}`;
+    elements.time.style.display = "block";
+    elements.result.style.display = "block";
+}
+
+elements.calculateButton.addEventListener("click", startFactorization);
+elements.numberInput.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        startFactorization();
+    }
+});
+
+elements.numberInput.addEventListener("beforeinput", (e) => {
+    const { value, selectionStart, selectionEnd } = elements.numberInput;
+    const nextLength = value.length - (selectionEnd - selectionStart) + (e.data?.length || 0);
+    if (nextLength > 30) e.preventDefault();
+  });
+
+elements.numberInput.addEventListener("input", () => {
+    const input = elements.numberInput;
+    if (input.value.length > 30) input.value = input.value.slice(0, 30);
+  
+    const len = input.value.length;
+    elements.charCounter.textContent = `現在の桁数: ${len}（最大30桁）`;
+    elements.charCounter.classList.toggle("limit-reached", len >= 30);
+    elements.charCounter.style.color = len === 30 ? "red" : "";
+});
 
 (async () => {
     primes = await loadPrimes();
