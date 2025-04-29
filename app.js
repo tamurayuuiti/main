@@ -35,7 +35,7 @@ window.addEventListener('message', (event) => {
       event_label: currentApp,
     });
 
-    console.log(`✅ 計算実行 tracked: ${currentApp}`);
+    console.log(`計算実行 tracked: ${currentApp}`);
   }
 });
 
