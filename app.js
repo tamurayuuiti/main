@@ -32,6 +32,7 @@ window.addEventListener('message', (event) => {
 const apps = [
   { id: 'Exponentiation', name: '累乗計算機' },
   { id: 'Prime_factorization', name: '素因数分解計算機' },
+  { id: 'student-roster', name: '3学年名簿' },
 ];
 
 // サイドメニューにアプリリストを追加
